@@ -101,9 +101,9 @@ class SerialUART{
 	 * \param string
 	 * \param size
 	 * 
-	 * \return void
+	 * \return int
 	 */
-	static void scan(SerialUART *serial, char *string, unsigned int size);
+	static int scan(SerialUART *serial, char *string, unsigned int size);
 	
 	/**
 	 * \brief 
@@ -212,9 +212,9 @@ class SerialUART{
 	 * \param string
 	 * \param size
 	 * 
-	 * \return void
+	 * \return int
 	 */
-	void scan(char *string, unsigned int size);
+	int scan(char *string, unsigned int size);
 	
 	/**
 	 * \brief 

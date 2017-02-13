@@ -76,8 +76,8 @@ void SerialUART::print(SerialUART *uart, char *string){
 	}
 }
 
-void SerialUART::scan(char *str, unsigned int size){
-	SerialUART::scan(this, str, size);
+int SerialUART::scan(char *str, unsigned int size){
+	return SerialUART::scan(this, str, size);
 }
 
 void SerialUART::scan(SerialUART *uart, char *str, unsigned int size){
@@ -87,6 +87,7 @@ void SerialUART::scan(SerialUART *uart, char *str, unsigned int size){
 		t = uart->timeout();
 		str++; i++;
 	}
+	return i;
 }
 
 bool SerialUART::available(void){
