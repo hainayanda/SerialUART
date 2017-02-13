@@ -1,4 +1,4 @@
-# SerialUART
+&# SerialUART
 UART universal library for ATmel Microcontroller
 
 ## Synopsis
@@ -32,7 +32,7 @@ char character = serial.getChar();
 //get string
 
 char[100] string;
-serial.scan(string, 100);
+serial.scan(&string, 100);
 
 //flush UDR
 
