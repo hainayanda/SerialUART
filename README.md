@@ -9,6 +9,7 @@ This is simple universal library for UART Serial communication using Atmel Micro
 
 Using the code is very simple. Just create the object and pass the address of UART register you want (UBRR, UCSR and UDR) and you are good to go.
 
+```C++
 //create default object with baud rate 9600 bps at serial pin 0
 
 SerialUART serial(&UBRR0L, &UBRR0H, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
@@ -37,7 +38,7 @@ serial.scan(&string, 100);
 //flush UDR
 
 serial.flush();
-
+```
 ## Motivation
 
 This is my personal library to use serial pin for Atmel Microcontroller. I think its a good thing if I share it for someone who need it
