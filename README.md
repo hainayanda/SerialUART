@@ -1,4 +1,4 @@
-&# SerialUART
+## SerialUART
 UART universal library for ATmel Microcontroller
 
 ## Synopsis
