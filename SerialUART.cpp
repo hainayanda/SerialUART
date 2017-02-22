@@ -7,10 +7,11 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include "SerialUART2560.h"
+#include "SerialUART.h"
 
-SerialUART::SerialUART(uint8_t *ubrrl, uint8_t *ubrrh,  uint8_t *ucsra,  uint8_t *ucsrb, uint8_t *ucsrc, uint8_t *udr){
-	init(9600L, ubrrl, ubrrh, ucsra, ucsrb, ucsrc, udr);
+SerialUART::SerialUART(bool def, uint8_t *ubrrl, uint8_t *ubrrh,  uint8_t *ucsra,  uint8_t *ucsrb, uint8_t *ucsrc, uint8_t *udr){
+	if(def)
+		init(9600L, ubrrl, ubrrh, ucsra, ucsrb, ucsrc, udr);
 }
 
 SerialUART::SerialUART(unsigned long baud, uint8_t *ubrrl, uint8_t *ubrrh,  uint8_t *ucsra,  uint8_t *ucsrb, uint8_t *ucsrc, uint8_t *udr){
@@ -31,20 +32,95 @@ void SerialUART::init(unsigned long baud, uint8_t *ubrrl, uint8_t *ubrrh,  uint8
 }
 
 void SerialUART::init(SerialUART *serial, unsigned long baud, uint8_t *ubrrl, uint8_t *ubrrh,  uint8_t *ucsra, uint8_t *ucsrb, uint8_t *ucsrc,  uint8_t *udr){
-	serial->timeOneBit = 1000000/baud;
-	serial->ubrrVal = F_CPU/16/baud-1;
+	serial->setBaud(baud);
 	serial->ubrrl = ubrrl;
 	serial->ubrrh = ubrrh;
 	serial->ucsra = ucsra;
 	serial->ucsrb = ucsrb;
 	serial->ucsrc = ucsrc;
 	serial->udr = udr;
-	*(serial->ubrrh) = serial->ubrrVal>>7;
-	*(serial->ubrrl) = serial->ubrrVal;
-	 //enable TX0 and RX0
-	*(serial->ucsrb) = ((1<<RX_ENABLE)|(1<<TX_ENABLE));
 	 // set 8 bit data and 2 bit stop bit
 	*(serial->ucsrc) = ((1<<U_STOP_BIT)|(1<<UCSZ0)|(1<<UCSZ1));
+	serial->enableSerial();
+}
+
+void SerialUART::enableRX(void){
+	*(this->ucsrb) |= (1<<RX_ENABLE);
+}
+
+void SerialUART::enableTX(void){
+	*(this->ucsrb) |= (1<<TX_ENABLE);
+}
+
+void SerialUART::enableSerial(void){
+	*(this->ucsrb) = ((1<<RX_ENABLE)|(1<<TX_ENABLE));
+}
+
+void SerialUART::disableRX(void){
+	*(this->ucsrb) |= (0<<RX_ENABLE);
+}
+
+void SerialUART::disableTX(void){
+	*(this->ucsrb) |= (0<<TX_ENABLE);
+}
+
+void SerialUART::disableSerial(void){
+	*(this->ucsrb) = ((0<<RX_ENABLE)|(0<<TX_ENABLE));
+}
+void SerialUART::setBaud(unsigned long baud){
+	setBaud(this, baud);
+}
+
+void SerialUART::setBaud(SerialUART *serial, unsigned long baud){
+	serial->timeOneBit = 1000000/baud;
+	serial->ubrrVal = F_CPU/16/baud-1;
+	setUBRR(serial);
+}
+
+unsigned long SerialUART::getBaud(void){
+	return 1000000 * timeOneBit;
+}
+
+void SerialUART::setUBRR(unsigned int ubrr){
+	this->ubrrVal = ubrr;
+	setUBRR(this);
+}
+
+void SerialUART::setUBRR(SerialUART *serial){
+	*(serial->ubrrh) = serial->ubrrVal>>7;
+	*(serial->ubrrl) = serial->ubrrVal;
+}
+
+unsigned int SerialUART::getUBRR(void){
+	return this->ubrrVal;
+}
+
+void SerialUART::setUCSR(uint8_t ucsra, uint8_t ucsrb, uint8_t ucsrc){
+	setUCSR(this, ucsra, ucsrb, ucsrc);
+}
+
+void SerialUART::setUCSR(SerialUART *serial, uint8_t ucsra, uint8_t ucsrb, uint8_t ucsrc){
+	*(serial->ucsra) = ucsra;
+	*(serial->ucsrb) = ucsrb;
+	*(serial->ucsrc) = ucsrc;
+}
+
+uint8_t SerialUART::getUCSR(uint8_t n){
+	return getUCSR(this, n);
+}
+
+uint8_t SerialUART::getUCSR(SerialUART *serial, uint8_t n){
+	switch(n){
+		case 0:
+		return *(serial->ucsra);
+		
+		case 1:
+		return *(serial->ucsrb);
+		
+		case 2:
+		return *(serial->ucsrc);
+	}
+	return 0x00;
 }
 
 char SerialUART::getChar(void){
@@ -80,7 +156,7 @@ int SerialUART::scan(char *str, unsigned int size){
 	return SerialUART::scan(this, str, size);
 }
 
-void SerialUART::scan(SerialUART *uart, char *str, unsigned int size){
+int SerialUART::scan(SerialUART *uart, char *str, unsigned int size){
 	unsigned int i = 0, t = 0;
 	while(!t && i < size){
 		*str = uart->getChar();

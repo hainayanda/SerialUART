@@ -123,12 +123,52 @@ class SerialUART{
 	 * \return void
 	 */
 	static void flush(volatile uint8_t *ucsra, volatile uint8_t *udr);
+	
+	/**
+	 * \brief 
+	 * 
+	 * \param serial
+	 * \param baud
+	 * 
+	 * \return void
+	 */
+	static void setBaud(SerialUART *serial, unsigned long baud);
 
+	/**
+	 * \brief 
+	 * 
+	 * \param serial
+	 * 
+	 * \return void
+	 */
+	static void setUBRR(SerialUART *serial);
+
+	/**
+	 * \brief 
+	 * 
+	 * \param serial
+	 * \param ucsr
+	 * 
+	 * \return void
+	 */
+	static void setUCSR(SerialUART *serial, uint8_t ucsra, uint8_t ucsrb, uint8_t ucsrc);
+
+	/**
+	 * \brief 
+	 * 
+	 * \param serial
+	 * \param n
+	 * 
+	 * \return uint8_t
+	 */
+	static uint8_t getUCSR(SerialUART *serial, uint8_t n);
+	
 	public:
 	
 	/**
 	 * \brief 
 	 * 
+	 * \bool def
 	 * \param ubrrl
 	 * \param ubrrh
 	 * \param ucsra
@@ -138,7 +178,7 @@ class SerialUART{
 	 * 
 	 * \return 
 	 */
-	SerialUART(uint8_t *ubrrl, uint8_t *ubrrh, uint8_t *ucsra, uint8_t *ucsrb, uint8_t *ucsrc, uint8_t *udr);
+	SerialUART(bool def, uint8_t *ubrrl, uint8_t *ubrrh, uint8_t *ucsra, uint8_t *ucsrb, uint8_t *ucsrc, uint8_t *udr);
 	
 	/**
 	 * \brief 
@@ -163,6 +203,116 @@ class SerialUART{
 	 * \return 
 	 */
 	~SerialUART(void);
+
+	/**
+	 * \brief 
+	 * 
+	 * \param 
+	 * 
+	 * \return void
+	 */
+	void enableSerial(void);
+	
+	/**
+	 * \brief 
+	 * 
+	 * \param 
+	 * 
+	 * \return void
+	 */
+	void enableRX(void);
+	
+	/**
+	 * \brief 
+	 * 
+	 * \param 
+	 * 
+	 * \return void
+	 */
+	void enableTX(void);
+	
+	/**
+	 * \brief 
+	 * 
+	 * \param 
+	 * 
+	 * \return void
+	 */
+	void disableSerial(void);
+	
+	/**
+	 * \brief 
+	 * 
+	 * \param 
+	 * 
+	 * \return void
+	 */
+	void disableRX(void);
+	
+	/**
+	 * \brief 
+	 * 
+	 * \param 
+	 * 
+	 * \return void
+	 */
+	void disableTX(void);
+
+	/**
+	 * \brief 
+	 * 
+	 * \param baud
+	 * 
+	 * \return void
+	 */
+	void setBaud(unsigned long baud);
+	
+	/**
+	 * \brief 
+	 * 
+	 * \param 
+	 * 
+	 * \return unsigned long
+	 */
+	unsigned long getBaud(void);
+
+	/**
+	 * \brief 
+	 * 
+	 * \param ubrr
+	 * 
+	 * \return void
+	 */
+	void setUBRR(unsigned int ubrr);
+	
+	/**
+	 * \brief 
+	 * 
+	 * \param 
+	 * 
+	 * \return unsigned int
+	 */
+	unsigned int getUBRR(void);
+	
+	/**
+	 * \brief 
+	 * 
+	 * \param ucsra
+	 * \param ucsrb
+	 * \param ucsrc
+	 * 
+	 * \return void
+	 */
+	void setUCSR(uint8_t ucsra, uint8_t ucsrb, uint8_t ucsrc);
+	
+	/**
+	 * \brief 
+	 * 
+	 * \param n
+	 * 
+	 * \return uint8_t
+	 */
+	uint8_t getUCSR(uint8_t n);
 
 	/**
 	 * \brief 
