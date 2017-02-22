@@ -11,7 +11,10 @@ Using the code is very simple. Just create the object and pass the address of UA
 
 ```C++
 //create default object with baud rate 9600 bps at serial pin 0
-SerialUART serial(&UBRR0L, &UBRR0H, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
+SerialUART serial(true, &UBRR0L, &UBRR0H, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
+
+//create custom object at serial pin 2
+SerialUART customSerial(false, &UBRR2L, &UBRR2H, &UCSR2A, &UCSR2B, &UCSR2C, &UDR2);
 
 //create object with custom baud rate, in this case are 19200 bps at serial pin 1
 SerialUART otherSerial(19200L, &UBRR1L, &UBRR1H, &UCSR1A, &UCSR1B, &UCSR1C, &UDR1);
